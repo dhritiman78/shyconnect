@@ -19,6 +19,8 @@ const Navbar = () => {
           <Image
             src="https://flowbite.com/docs/images/logo.svg"
             alt="ShyConnect Logo"
+            width={32}
+            height={32}
             className="h-8 w-8"
           />
           <span className="text-2xl font-bold text-gray-800 dark:text-white">
@@ -34,8 +36,8 @@ const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link href="/user/profile" className="hover:text-blue-600 dark:hover:text-blue-400">
-              Profile
+            <Link href="/user/connection/all" className="hover:text-blue-600 dark:hover:text-blue-400">
+              Connections
             </Link>
           </li>
           <li>
@@ -88,8 +90,8 @@ const Navbar = () => {
               </Link>
             </li>
             <li>
-              <Link href="/user/profile" className="hover:text-blue-600 dark:hover:text-blue-400">
-                Profile
+              <Link href="/user/connection/all" className="hover:text-blue-600 dark:hover:text-blue-400">
+              Connections
               </Link>
             </li>
             <li>

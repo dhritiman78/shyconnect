@@ -22,7 +22,7 @@ export function useAuth() {
         })
         .then((data) => setUser(data))
         .catch(() => {
-          localStorage.removeItem('refreshToken'); // Clean up invalid token
+          // localStorage.removeItem('refreshToken'); // Clean up invalid token
           setUser(null); // Clear user state
           router.push('/auth/login'); // Redirect to login
         });

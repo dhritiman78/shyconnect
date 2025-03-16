@@ -16,11 +16,11 @@ const ProfilePage = () => {
       method: "POST",
       credentials: 'include'
   })
-  .then((res) => {
+  .then(async (res) => {
     if (res.ok) {
       toast.success("Logout successful");
+      await router.push("/auth/login");
       window.location.reload();
-      router.push("/auth/login");
     } else {
       toast.error("Something went wrong! Please try again later");
     }

@@ -33,8 +33,8 @@ const Page = () => {
       const data = await response.json()
       setLogging(false)
       localStorage.setItem('refreshToken',data.token)
+      await router.push('/'); 
       window.location.reload()
-      router.push('/'); 
       toast.success("Login Successfull 🎉")
     } else if (response.status == 404) {
       setLogging(false)

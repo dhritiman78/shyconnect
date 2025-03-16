@@ -1,4 +1,5 @@
 import User from "@/models/user";
+import { authenticateAndFetchUser } from "@/utils/authUtils";
 import { verifyToken } from "@/utils/verifyToken";
 import { NextResponse } from "next/server";
 
@@ -8,22 +9,11 @@ export async function PUT(req, { params }) {
     if (!id) {
       return NextResponse.json({ message: "Target user ID is required!" }, { status: 400 });
     }
-
-    // Extract the Authorization header
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ message: "Unauthorized access!" }, { status: 401 });
-    }
-
-    // Extract and verify the token
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyToken(token, process.env.NEXT_JWT_REFRESH);
-    if (!decoded || !decoded.id) {
-      return NextResponse.json({ message: "Invalid token!" }, { status: 401 });
-    }
+    const { user, error } = await authenticateAndFetchUser(req);
+    if (error) return error;
 
     // Validate the requesting user
-    const requestingUser = await User.findById(decoded.id, "_id name connections").lean();
+    const requestingUser = await User.findById(user._id, "_id name connections").lean();
     if (!requestingUser) {
       return NextResponse.json({ message: "Requesting user not found!" }, { status: 404 });
     }

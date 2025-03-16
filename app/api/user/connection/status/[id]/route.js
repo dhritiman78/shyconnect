@@ -1,28 +1,16 @@
 import User from "@/models/user"; // Adjust path based on your project structure
+import { authenticateAndFetchUser } from "@/utils/authUtils";
 import { verifyToken } from "@/utils/verifyToken";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
   const { id } = await params; // Target user's ID
-  const authHeader = req.headers.get("authorization");
 
   try {
-    // Check for authorization header
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ message: "Unauthorized access!" }, { status: 401 });
-    }
-
-    // Extract and verify the token
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyToken(token, process.env.NEXT_JWT_REFRESH);
-    if (!decoded || !decoded.id) {
-      return NextResponse.json({ message: "Invalid token!" }, { status: 401 });
-    }
-
-    const currentUserId = decoded.id; // Logged-in user's ID
-
+    const { user, error } = await authenticateAndFetchUser(req);
+    if (error) return error;
     // Fetch the current user's data
-    const currentUser = await User.findById(currentUserId, "connections");
+    const currentUser = await User.findById(user._id, "connections");
     if (!currentUser) {
       return NextResponse.json({ message: "User not found!" }, { status: 404 });
     }

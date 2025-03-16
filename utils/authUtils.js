@@ -4,15 +4,16 @@ import { NextResponse } from "next/server";
 
 export async function authenticateAndFetchUser(req) {
   try {
-    // Extract the Authorization header
-    const authHeader = req.headers.get("authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return { error: NextResponse.json({ message: "Unauthorized access!" }, { status: 401 }) };
+
+    const accessToken = req.cookies.get("accessToken");
+    const refreshToken = req.cookies.get("refreshToken");
+
+    // FOR DEVELOPMENT PURPOSES ONLY
+    if (!accessToken) {
+      return { error: NextResponse.json({ message: "No token provided!" }, { status: 401 }) };
     }
 
-    // Extract and verify the token
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyToken(token, process.env.NEXT_JWT_REFRESH);
+    const decoded = verifyToken(accessToken.value, process.env.NEXT_JWT_ACCESS);
     if (!decoded || !decoded.id) {
       return { error: NextResponse.json({ message: "Invalid token!" }, { status: 401 }) };
     }

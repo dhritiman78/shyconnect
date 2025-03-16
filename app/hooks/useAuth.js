@@ -8,29 +8,17 @@ export function useAuth() {
     const router = useRouter();
 
     useEffect(() => {
-        const token = localStorage.getItem('refreshToken');
-    if (!token) {  
-      setUser(null); // Not logged in
-      router.push('/auth/login'); // Redirect to login
-    } else {
       fetch('/api/user/token', {
-        headers: { Authorization: `Bearer ${token}` },
+        credentials: 'include',
       })
         .then((res) => {
           if (!res.ok) throw new Error('Unauthorized');
           return res.json();
         })
         .then((data) => setUser(data))
-        .catch(() => {
-          // localStorage.removeItem('refreshToken'); // Clean up invalid token
-          setUser(null); // Clear user state
-          router.push('/auth/login'); // Redirect to login
-        });
-    }
     }, [router]);
 
-  // Return user if it's available, otherwise null
-  return user;
+    return user;
 }
 
   

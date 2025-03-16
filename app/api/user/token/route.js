@@ -5,15 +5,10 @@ import { NextResponse } from "next/server";
 export async function GET(req, { params }) {
 
   try {
-    // Extract the Authorization header
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return NextResponse.json({ message: "Unauthorized access!" }, { status: 401 });
-    }
+    const accessToken = req.cookies.get("accessToken").value;
+    const refreshToken = req.cookies.get("refreshToken").value;
 
-    // Extract and verify the token
-    const token = authHeader.split(" ")[1];
-    const decoded = verifyToken(token, process.env.NEXT_JWT_REFRESH);
+    const decoded = verifyToken(accessToken, process.env.NEXT_JWT_ACCESS);
 
     // Validate the decoded user
     const decoded_user = await User.findById(decoded.id, "_id name bio gender email course school department avatar connections");
